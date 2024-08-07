@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, IconButton, Typography } from '@mui/material';
+import { Card, CardContent, List, ListItem, ListItemIcon, ListItemSecondaryAction, IconButton } from '@mui/material';
 import { List as ChevronRight } from 'react-bootstrap-icons';
 
 

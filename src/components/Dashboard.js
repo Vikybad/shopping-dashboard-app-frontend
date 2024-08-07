@@ -10,7 +10,7 @@ import { AuthContext } from '../contexts/AuthContext';
 
 
 
-const PieChart = ({ percentage, text }) => {
+const PieChart = ({ percentage }) => {
   const radius = 30; // Reduced radius
   const strokeWidth = 10; // Adjust stroke width to fit the new radius
   const circumference = 2 * Math.PI * radius;
@@ -73,7 +73,7 @@ const Dashboard = ({ showSnackbar }) => {
 
   useEffect(() => {
     if (!token) {
-      return sessionExpired()
+      return sessionExpired();
     }
     async function getOrders() {
       await axios.get('http://localhost:5000/api/orders/get-orders', {
@@ -90,7 +90,7 @@ const Dashboard = ({ showSnackbar }) => {
         if (errorMssgFromApi) {
           console.log('errorMssgFromApi to get orders', errorMssgFromApi);
           if (errorMssgFromApi === "No token, authorization denied") {
-            return sessionExpired();
+            sessionExpired();
           }
         }
         console.log('error', error);

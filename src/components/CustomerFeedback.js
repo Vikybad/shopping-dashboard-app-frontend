@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Typography, List, ListItem, ListItemAvatar, Avatar, Rating, Box, Divider } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 
 const feedbacks = [

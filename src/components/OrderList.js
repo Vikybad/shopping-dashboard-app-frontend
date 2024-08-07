@@ -43,7 +43,9 @@ const OrderList = ({ showSnackbar }) => {
     const fetchOrders = async () => {
       return await getOrders();
     };
-    if (token) fetchOrders();
+    if (token) {
+      return fetchOrders();
+    }
   }, [token]);
 
   const handleOpenDialog = (order) => {

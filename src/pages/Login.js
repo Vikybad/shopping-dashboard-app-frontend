@@ -9,7 +9,7 @@ import axios from 'axios';
 const Login = ({ showSnackbar }) => {
   const [loginData, setLoginData] = useState({ login: '', password: '' });
   const navigate = useNavigate();
-  const { login, token } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
