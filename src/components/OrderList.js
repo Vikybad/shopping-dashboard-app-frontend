@@ -1,31 +1,33 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
+require('dotenv').config();
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
 
 const OrderList = ({ showSnackbar }) => {
-
+  const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [newStatus, setNewStatus] = useState('');
   const { token } = useContext(AuthContext);
 
-  const sessionExpired = () => {
+  const sessionExpired = useCallback(() => {
     showSnackbar({
       message: `Session expired, please signin again`,
       severity: 'error',
       autoHideDuration: 500,
       redirectToPath: '/login'
     });
-  }
+  }, [showSnackbar]);
 
 
   const getOrders = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/orders/get-orders', { headers: { 'x-auth-token': token } });
+      const res = await axios.get(BACKEND_BASE_URL + '/api/orders/get-orders', { headers: { 'x-auth-token': token } });
       setOrders(res.data);
     } catch (error) {
       console.error('Error fetching orders', error);
@@ -40,13 +42,14 @@ const OrderList = ({ showSnackbar }) => {
   }
 
   useEffect(() => {
-    let isMounted = true; // track if component is still mounted
-  
+    let isMounted = true;
+    if (loaded) return true;
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/orders/get-orders', { headers: { 'x-auth-token': token } });
+        const res = await axios.get(BACKEND_BASE_URL + '/api/orders/get-orders', { headers: { 'x-auth-token': token } });
         if (isMounted) {
           setOrders(res.data);
+          setLoaded(true)
         }
       } catch (error) {
         console.error('Error fetching orders', error);
@@ -59,16 +62,16 @@ const OrderList = ({ showSnackbar }) => {
         }
       }
     };
-  
+
     if (token) {
       fetchOrders();
     }
-  
+
     return () => {
-      isMounted = false; // cleanup function to prevent setting state if unmounted
+      isMounted = false;
     };
-  }, [token]);
-  
+  }, [token, sessionExpired]);
+
 
   const handleOpenDialog = (order) => {
     setSelectedOrder(order);

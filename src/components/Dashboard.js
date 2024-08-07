@@ -7,7 +7,8 @@ import RecentOrders from './RecentOrders';
 import CustomerFeedback from './CustomerFeedback';
 import GoalsList from './GoalsList';
 import { AuthContext } from '../contexts/AuthContext';
-
+require('dotenv').config();
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
 
 
 const PieChart = ({ percentage }) => {
@@ -56,7 +57,7 @@ const PieChart = ({ percentage }) => {
 
 
 const Dashboard = ({ showSnackbar }) => {
-
+  const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [netProfit, setNetProfit] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -75,8 +76,9 @@ const Dashboard = ({ showSnackbar }) => {
     if (!token) {
       return sessionExpired();
     }
+    if (loaded) return true;
     async function getOrders() {
-      await axios.get('http://localhost:5000/api/orders/get-orders', {
+      await axios.get(BACKEND_BASE_URL + '/api/orders/get-orders', {
         headers: { 'x-auth-token': token },
       }).then(response => {
         setOrders(response.data);
@@ -84,7 +86,7 @@ const Dashboard = ({ showSnackbar }) => {
         setNetProfit(6759.25);
         // Calculate progress based on net profit and goal
         setProgress(70);
-
+        setLoaded(true); 
       }).catch((error) => {
         let errorMssgFromApi = error?.response?.data?.msg
         if (errorMssgFromApi) {

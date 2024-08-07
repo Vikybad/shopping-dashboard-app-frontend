@@ -2,7 +2,8 @@ import React, { useState, useContext } from 'react';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
+require('dotenv').config();
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
 import axios from 'axios';
 
 
@@ -19,7 +20,7 @@ const Login = ({ showSnackbar }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', loginData);
+      const response = await axios.post(BACKEND_BASE_URL + '/api/users/login', loginData);
       if (response?.data?.msg) throw new Error(response.data.msg);
       if (!response?.data?.token) throw new Error(`Some error occured`);
       let generatedToken = response?.data?.token;

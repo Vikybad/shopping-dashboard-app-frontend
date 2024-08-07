@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import axios from 'axios';
-
+require('dotenv').config();
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
 
 const Signup = ({ showSnackbar }) => {
 
@@ -23,7 +24,7 @@ const Signup = ({ showSnackbar }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/users/register', signupData);
+            const response = await axios.post(BACKEND_BASE_URL + '/api/users/register', signupData);
             if (response?.data?.msg) throw new Error(response.data.msg);
             if (!response?.data?.token) throw new Error(`Some error occured`);
 

@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import { Card, CardContent, Typography, TextField, Button, Box } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+require('dotenv').config();
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
 
 const AddOrderForm = ({ showSnackbar }) => {
 
@@ -29,7 +31,7 @@ const AddOrderForm = ({ showSnackbar }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/api/orders/add-order', orderData, {
+    await axios.post(BACKEND_BASE_URL + '/api/orders/add-order', orderData, {
       headers: { 'x-auth-token': token },
     }).then(res => {
       console.log(res);

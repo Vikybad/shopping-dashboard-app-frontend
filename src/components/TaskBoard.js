@@ -1,12 +1,14 @@
 import axios from 'axios';
-
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, CardContent, Typography, List, ListItem, ListItemText, Checkbox, TextField, Button, Box } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
+require('dotenv').config();
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
 
 
 const TaskBoard = ({ showSnackbar }) => {
   const { token } = useContext(AuthContext);
+  const [loaded, setLoaded] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
@@ -23,7 +25,7 @@ const TaskBoard = ({ showSnackbar }) => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
+      const response = await axios.get(BACKEND_BASE_URL + '/api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
       if (response?.data?.msg) throw new Error(response.data.msg);
       if (Array.isArray(response?.data)) {
         let tasksList = response?.data
@@ -52,7 +54,7 @@ const TaskBoard = ({ showSnackbar }) => {
 
   const saveTask = async (newTaskObj) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/tasks/add-task', newTaskObj, { headers: { 'x-auth-token': token } });
+      const response = await axios.post(BACKEND_BASE_URL + '/api/tasks/add-task', newTaskObj, { headers: { 'x-auth-token': token } });
       if (Array.isArray(response?.data)) {
         snackBarMssg('Task added successfully...', 'success')
 
@@ -106,7 +108,8 @@ const TaskBoard = ({ showSnackbar }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
+        if (loaded) return true;
+        const response = await axios.get(BACKEND_BASE_URL + '/api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
         if (response?.data?.msg) throw new Error(response.data.msg);
         if (Array.isArray(response?.data)) {
           let tasksList = response?.data;
@@ -117,6 +120,7 @@ const TaskBoard = ({ showSnackbar }) => {
             }));
           }
           setTasks(tasksList);
+          setLoaded(true); 
         }
         snackBarMssg('Task added successfully...', 'success');
       } catch (error) {
