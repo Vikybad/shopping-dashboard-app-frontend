@@ -97,7 +97,7 @@ const Dashboard = ({ showSnackbar }) => {
       });
     }
     getOrders()
-  }, [token]);
+  }, [token, sessionExpired]);
 
 
 

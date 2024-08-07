@@ -104,15 +104,36 @@ const TaskBoard = ({ showSnackbar }) => {
 
   // Fetch tasks from the API when the component mounts
   useEffect(() => {
-    const loadTasks = async () => {
+    const fetchTasks = async () => {
       try {
-        await fetchTasks();
+        const response = await axios.get('http://localhost:5000/api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
+        if (response?.data?.msg) throw new Error(response.data.msg);
+        if (Array.isArray(response?.data)) {
+          let tasksList = response?.data;
+          if (tasksList?.length) {
+            tasksList = tasksList.map(v => ({
+              ...v,
+              id: v._id
+            }));
+          }
+          setTasks(tasksList);
+        }
+        snackBarMssg('Task added successfully...', 'success');
       } catch (error) {
-        console.error('Failed to fetch tasks', error);
+        console.error(`Error in fetching tasks: ${error.message}`);
+        let errorMssgFromApi = error?.response?.data?.msg;
+        if (errorMssgFromApi) {
+          console.log('errorMssgFromApi to get tasks: ', errorMssgFromApi);
+          if (errorMssgFromApi === "No token, authorization denied") {
+            return snackBarMssg('Session expired', 'error', '/login');
+          }
+        }
+        console.log('error', error);
       }
     };
-    loadTasks();
-  }, []);
+
+    fetchTasks();
+  }, [fetchTasks]);
 
   const handleAddTask = async () => {
     if (newTask.trim() !== '') {

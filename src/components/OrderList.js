@@ -40,13 +40,35 @@ const OrderList = ({ showSnackbar }) => {
   }
 
   useEffect(() => {
+    let isMounted = true; // track if component is still mounted
+  
     const fetchOrders = async () => {
-      return await getOrders();
+      try {
+        const res = await axios.get('http://localhost:5000/api/orders/get-orders', { headers: { 'x-auth-token': token } });
+        if (isMounted) {
+          setOrders(res.data);
+        }
+      } catch (error) {
+        console.error('Error fetching orders', error);
+        let errorMssgFromApi = error?.response?.data?.msg
+        if (errorMssgFromApi) {
+          console.log('errorMssgFromApi to get orders', errorMssgFromApi);
+          if (errorMssgFromApi === "No token, authorization denied") {
+            sessionExpired();
+          }
+        }
+      }
     };
+  
     if (token) {
-      return fetchOrders();
+      fetchOrders();
     }
+  
+    return () => {
+      isMounted = false; // cleanup function to prevent setting state if unmounted
+    };
   }, [token]);
+  
 
   const handleOpenDialog = (order) => {
     setSelectedOrder(order);
