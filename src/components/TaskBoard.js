@@ -2,11 +2,12 @@ import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, CardContent, Typography, List, ListItem, ListItemText, Checkbox, TextField, Button, Box } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
-require('dotenv').config();
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
+
 
 
 const TaskBoard = ({ showSnackbar }) => {
+  const BACKEND_BASE_URL = 'http://localhost:5000'
+
   const { token } = useContext(AuthContext);
   const [loaded, setLoaded] = useState(false);
   const [tasks, setTasks] = useState([]);

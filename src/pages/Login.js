@@ -2,12 +2,13 @@ import React, { useState, useContext } from 'react';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-require('dotenv').config();
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
+
 import axios from 'axios';
 
 
 const Login = ({ showSnackbar }) => {
+  const BACKEND_BASE_URL = 'http://localhost:5000'
+
   const [loginData, setLoginData] = useState({ login: '', password: '' });
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);

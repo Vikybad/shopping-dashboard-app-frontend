@@ -4,10 +4,11 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
-require('dotenv').config();
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
+
 
 const OrderList = ({ showSnackbar }) => {
+  const BACKEND_BASE_URL = 'http://localhost:5000'
+
   const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -43,34 +44,32 @@ const OrderList = ({ showSnackbar }) => {
 
   useEffect(() => {
     let isMounted = true;
-    if (loaded) return true;
+
     const fetchOrders = async () => {
       try {
         const res = await axios.get(BACKEND_BASE_URL + '/api/orders/get-orders', { headers: { 'x-auth-token': token } });
         if (isMounted) {
           setOrders(res.data);
-          setLoaded(true)
+          setLoaded(true);
         }
       } catch (error) {
         console.error('Error fetching orders', error);
-        let errorMssgFromApi = error?.response?.data?.msg
-        if (errorMssgFromApi) {
-          console.log('errorMssgFromApi to get orders', errorMssgFromApi);
-          if (errorMssgFromApi === "No token, authorization denied") {
-            sessionExpired();
-          }
+        let errorMssgFromApi = error?.response?.data?.msg;
+        if (errorMssgFromApi === "No token, authorization denied") {
+          sessionExpired();
         }
       }
     };
 
-    if (token) {
+    if (token && !loaded) {
       fetchOrders();
     }
 
     return () => {
       isMounted = false;
     };
-  }, [token, sessionExpired]);
+  }, [token, sessionExpired, loaded]);
+
 
 
   const handleOpenDialog = (order) => {

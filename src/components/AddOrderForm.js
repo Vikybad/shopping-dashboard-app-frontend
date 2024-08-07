@@ -2,10 +2,10 @@ import React, { useState, useContext } from 'react';
 import { Card, CardContent, Typography, TextField, Button, Box } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
-require('dotenv').config();
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
+
 
 const AddOrderForm = ({ showSnackbar }) => {
+  const BACKEND_BASE_URL = 'http://localhost:5000'
 
   const { token } = useContext(AuthContext)
   const [orderData, setOrderData] = useState({

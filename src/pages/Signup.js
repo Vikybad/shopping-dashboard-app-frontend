@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Typography, Box } from '@mui/material';
 import axios from 'axios';
-require('dotenv').config();
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL
+
 
 const Signup = ({ showSnackbar }) => {
+    const BACKEND_BASE_URL = 'http://localhost:5000'
 
     const navigate = useNavigate();
     const [signupData, setSignupData] = useState({
