@@ -86,14 +86,14 @@ const Signup = ({ showSnackbar }) => {
                 value={signupData.password}
                 onChange={handleChange}
             />
-            <TextField
+            {/* <TextField
                 fullWidth
                 margin="normal"
                 name="image"
                 label="Profile Image URL"
                 value={signupData.image}
                 onChange={handleChange}
-            />
+            /> */}
             <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                 Sign up
             </Button>
