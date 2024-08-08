@@ -131,7 +131,7 @@ const TaskBoard = ({ showSnackbar }) => {
   const handleToggleTask = async (id) => {
     try {
       const updatedTasks = tasks.map(task =>
-        task.id === id ? { ...task, completed: !task.completed } : task
+        task._id === id ? { ...task, completed: !task.completed } : task
       );
       setTasks(updatedTasks);
 
@@ -156,13 +156,28 @@ const TaskBoard = ({ showSnackbar }) => {
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
           />
-          <Button variant="contained" onClick={handleAddTask} sx={{ ml: 1 }}>
-            Add
+          <Button
+            variant="contained"
+            onClick={handleAddTask}
+            sx={{
+              ml: 1,
+              width: 150,
+              color: 'black',
+              backgroundColor: 'lightblue',
+              fontWeight: 'bold',
+              fontSize: '20px',
+              '&:hover': {
+                color: 'white',
+                backgroundColor: 'darkpurple'
+              }
+            }}
+          >
+            Add Task
           </Button>
         </Box>
         <List>
           {tasks.map((task) => (
-            <ListItem key={task.id} dense button onClick={() => handleToggleTask(task.id)}>
+            <ListItem key={task.id} dense button onClick={() => handleToggleTask(task._id)}>
               <Checkbox
                 edge="start"
                 checked={task.completed}
@@ -179,69 +194,3 @@ const TaskBoard = ({ showSnackbar }) => {
 };
 
 export default TaskBoard;
-
-
-
-
-
-
-
-
-
-// import React, { useState } from 'react';
-// import { Card, CardContent, Typography, List, ListItem, ListItemText, Checkbox, TextField, Button, Box } from '@mui/material';
-
-// const TaskBoard = () => {
-//   const [tasks, setTasks] = useState([]);
-//   const [newTask, setNewTask] = useState('');
-
-//   const handleAddTask = () => {
-//     if (newTask.trim() !== '') {
-//       setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
-//       setNewTask('');
-//     }
-//   };
-
-//   const handleToggleTask = (id) => {
-//     setTasks(tasks.map(task => 
-//       task.id === id ? { ...task, completed: !task.completed } : task
-//     ));
-//   };
-
-//   return (
-//     <Card sx={{ flexGrow: 1, p: 7 }}>
-//       <CardContent>
-//         <Typography variant="h6" gutterBottom>
-//           Task Board
-//         </Typography>
-//         <Box display="flex" mb={2}>
-//           <TextField
-//             fullWidth
-//             variant="outlined"
-//             placeholder="Add a new task"
-//             value={newTask}
-//             onChange={(e) => setNewTask(e.target.value)}
-//           />
-//           <Button variant="contained" onClick={handleAddTask} sx={{ ml: 1 }}>
-//             Add
-//           </Button>
-//         </Box>
-//         <List>
-//           {tasks.map((task) => (
-//             <ListItem key={task.id} dense button onClick={() => handleToggleTask(task.id)}>
-//               <Checkbox
-//                 edge="start"
-//                 checked={task.completed}
-//                 tabIndex={-1}
-//                 disableRipple
-//               />
-//               <ListItemText primary={task.text} style={{ textDecoration: task.completed ? 'line-through' : 'none' }} />
-//             </ListItem>
-//           ))}
-//         </List>
-//       </CardContent>
-//     </Card>
-//   );
-// };
-
-// export default TaskBoard;
