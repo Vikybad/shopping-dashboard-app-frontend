@@ -4,14 +4,11 @@ FROM node:18 AS build
 # Set the working directory in the container
 WORKDIR /usr/src/frontend
 
-# Copy package.json and package-lock.json
-COPY dashboard-frontend/package*.json ./
+# Copy the application data
+COPY . .
 
 # Install dependencies
 RUN npm install
-
-# Copy the rest of the application code
-COPY dashboard-frontend .
 
 # Build the React application
 RUN npm run build

@@ -3,10 +3,8 @@ import { Card, CardContent, Typography, TextField, Button, Box } from '@mui/mate
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 
-
 const AddOrderForm = ({ showSnackbar }) => {
-  const BACKEND_BASE_URL = 'http://localhost:5000'
-
+  const BASEURL = "http://localhost:5000"
   const { token } = useContext(AuthContext)
   const [orderData, setOrderData] = useState({
     customerName: '',
@@ -31,7 +29,7 @@ const AddOrderForm = ({ showSnackbar }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post(BACKEND_BASE_URL + '/api/orders/add-order', orderData, {
+    await axios.post(BASEURL + 'api/orders/add-order', orderData, {
       headers: { 'x-auth-token': token },
     }).then(res => {
       console.log(res);

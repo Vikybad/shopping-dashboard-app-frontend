@@ -7,8 +7,7 @@ import axios from 'axios';
 
 
 const Login = ({ showSnackbar }) => {
-  const BACKEND_BASE_URL = 'http://localhost:5000'
-
+  const BASEURL = "http://localhost:5000"
   const [loginData, setLoginData] = useState({ login: '', password: '' });
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
@@ -21,7 +20,7 @@ const Login = ({ showSnackbar }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(BACKEND_BASE_URL + '/api/users/login', loginData);
+      const response = await axios.post(BASEURL + 'api/users/login', loginData);
       if (response?.data?.msg) throw new Error(response.data.msg);
       if (!response?.data?.token) throw new Error(`Some error occured`);
       let generatedToken = response?.data?.token;

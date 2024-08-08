@@ -5,8 +5,7 @@ import axios from 'axios';
 
 
 const Signup = ({ showSnackbar }) => {
-    const BACKEND_BASE_URL = 'http://localhost:5000'
-
+    const BASEURL = "http://localhost:5000"
     const navigate = useNavigate();
     const [signupData, setSignupData] = useState({
         username: '',
@@ -24,7 +23,7 @@ const Signup = ({ showSnackbar }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(BACKEND_BASE_URL + '/api/users/register', signupData);
+            const response = await axios.post(BASEURL + 'api/users/register', signupData);
             if (response?.data?.msg) throw new Error(response.data.msg);
             if (!response?.data?.token) throw new Error(`Some error occured`);
 

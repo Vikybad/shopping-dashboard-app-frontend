@@ -1,15 +1,13 @@
 import axios from 'axios';
+
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, CardContent, Typography, List, ListItem, ListItemText, Checkbox, TextField, Button, Box } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
 
 
-
 const TaskBoard = ({ showSnackbar }) => {
-  const BACKEND_BASE_URL = 'http://localhost:5000'
-
+  const BASEURL = "http://localhost:5000"
   const { token } = useContext(AuthContext);
-  const [loaded, setLoaded] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
@@ -26,7 +24,7 @@ const TaskBoard = ({ showSnackbar }) => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(BACKEND_BASE_URL + '/api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
+      const response = await axios.get(BASEURL + 'api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
       if (response?.data?.msg) throw new Error(response.data.msg);
       if (Array.isArray(response?.data)) {
         let tasksList = response?.data
@@ -55,7 +53,7 @@ const TaskBoard = ({ showSnackbar }) => {
 
   const saveTask = async (newTaskObj) => {
     try {
-      const response = await axios.post(BACKEND_BASE_URL + '/api/tasks/add-task', newTaskObj, { headers: { 'x-auth-token': token } });
+      const response = await axios.post(BASEURL + 'api/tasks/add-task', newTaskObj, { headers: { 'x-auth-token': token } });
       if (Array.isArray(response?.data)) {
         snackBarMssg('Task added successfully...', 'success')
 
@@ -107,38 +105,15 @@ const TaskBoard = ({ showSnackbar }) => {
 
   // Fetch tasks from the API when the component mounts
   useEffect(() => {
-    const fetchTasks = async () => {
+    const loadTasks = async () => {
       try {
-        if (loaded) return true;
-        const response = await axios.get(BACKEND_BASE_URL + '/api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
-        if (response?.data?.msg) throw new Error(response.data.msg);
-        if (Array.isArray(response?.data)) {
-          let tasksList = response?.data;
-          if (tasksList?.length) {
-            tasksList = tasksList.map(v => ({
-              ...v,
-              id: v._id
-            }));
-          }
-          setTasks(tasksList);
-          setLoaded(true); 
-        }
-        snackBarMssg('Task added successfully...', 'success');
+        await fetchTasks();
       } catch (error) {
-        console.error(`Error in fetching tasks: ${error.message}`);
-        let errorMssgFromApi = error?.response?.data?.msg;
-        if (errorMssgFromApi) {
-          console.log('errorMssgFromApi to get tasks: ', errorMssgFromApi);
-          if (errorMssgFromApi === "No token, authorization denied") {
-            return snackBarMssg('Session expired', 'error', '/login');
-          }
-        }
-        console.log('error', error);
+        console.error('Failed to fetch tasks', error);
       }
     };
-
-    fetchTasks();
-  }, [fetchTasks]);
+    loadTasks();
+  }, []);
 
   const handleAddTask = async () => {
     if (newTask.trim() !== '') {

@@ -1,34 +1,31 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
 
-
 const OrderList = ({ showSnackbar }) => {
-  const BACKEND_BASE_URL = 'http://localhost:5000'
-
-  const [loaded, setLoaded] = useState(false);
+  const BASEURL = "http://localhost:5000"
   const [orders, setOrders] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [newStatus, setNewStatus] = useState('');
   const { token } = useContext(AuthContext);
 
-  const sessionExpired = useCallback(() => {
+  const sessionExpired = () => {
     showSnackbar({
       message: `Session expired, please signin again`,
       severity: 'error',
       autoHideDuration: 500,
       redirectToPath: '/login'
     });
-  }, [showSnackbar]);
+  }
 
 
   const getOrders = async () => {
     try {
-      const res = await axios.get(BACKEND_BASE_URL + '/api/orders/get-orders', { headers: { 'x-auth-token': token } });
+      const res = await axios.get(BASEURL + 'api/orders/get-orders', { headers: { 'x-auth-token': token } });
       setOrders(res.data);
     } catch (error) {
       console.error('Error fetching orders', error);
@@ -43,34 +40,12 @@ const OrderList = ({ showSnackbar }) => {
   }
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchOrders = async () => {
-      try {
-        const res = await axios.get(BACKEND_BASE_URL + '/api/orders/get-orders', { headers: { 'x-auth-token': token } });
-        if (isMounted) {
-          setOrders(res.data);
-          setLoaded(true);
-        }
-      } catch (error) {
-        console.error('Error fetching orders', error);
-        let errorMssgFromApi = error?.response?.data?.msg;
-        if (errorMssgFromApi === "No token, authorization denied") {
-          sessionExpired();
-        }
-      }
+    const fetchOrders = () => {
+      getOrders();
     };
-
-    if (token && !loaded) {
-      fetchOrders();
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [token, sessionExpired, loaded]);
-
-
+    // if (token) 
+    fetchOrders();
+  }, [token, getOrders]);
 
   const handleOpenDialog = (order) => {
     setSelectedOrder(order);
