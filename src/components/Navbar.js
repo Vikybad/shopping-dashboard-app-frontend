@@ -1,10 +1,13 @@
-import React from 'react';
-import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Box } from '@mui/material';
+import React, { useState, useContext } from 'react';
+import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Box, Menu, MenuItem, Divider } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
+import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -45,11 +48,60 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Navbar = () => {
-  return (
-    <AppBar position="fixed" sx={{ backgroundColor: '##202022' }}>
-      <Toolbar>
+const Navbar = ({ showSnackbar }) => {
 
+  // const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
+  const BASEURL = "http://localhost:5000/"
+
+  let { token } = useContext(AuthContext)
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+
+  const deleteUser = async () => {
+    try {
+      await axios.delete(BASEURL + 'api/users/me', { headers: { 'x-auth-token': token } });
+
+      showSnackbar({
+        message: 'Account Deleted! Redirecting to signup page...',
+        severity: 'success',
+        autoHideDuration: 1000,
+        redirectToPath: '/signup'
+      });
+
+    } catch (error) {
+      console.error(`Error in login: ${error.message}`);
+      showSnackbar({
+        message: `Some error occured: ${error.message}`,
+        severity: 'error',
+        autoHideDuration: 2000
+      });
+    }
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDeleteUser = () => {
+    // Implement user deletion logic here
+    deleteUser()
+    console.log('Delete user');
+    handleClose();
+  };
+
+  const handleUpdateUser = () => {
+    // Implement user update logic here
+    console.log('Update user info');
+    handleClose();
+  };
+
+  return (
+    <AppBar position="fixed" sx={{ backgroundColor: '#202022' }}>
+      <Toolbar>
         <Search>
           <SearchIconWrapper>
             <SearchIcon />
@@ -79,14 +131,25 @@ const Navbar = () => {
             </Badge>
           </IconButton>
 
-          <IconButton color="inherit">
+          <IconButton color="inherit" onClick={handleAvatarClick}>
             <Avatar alt="User Avatar" src="/static/images/avatar/1.jpg" sx={{ width: 32, height: 32 }} />
           </IconButton>
 
         </Box>
       </Toolbar>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {/* <MenuItem onClick={handleUpdateUser}>Update Info</MenuItem> */}
+        {/* <Divider /> */}
+        <MenuItem onClick={handleDeleteUser}>Delete Account</MenuItem>
+      </Menu>
     </AppBar>
   );
 };
 
 export default Navbar;
+

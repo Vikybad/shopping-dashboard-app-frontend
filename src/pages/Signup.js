@@ -30,9 +30,9 @@ const Signup = ({ showSnackbar }) => {
             showSnackbar({
                 message: 'Signup successful! Redirecting to login...',
                 severity: 'success',
-                autoHideDuration: 1500
+                autoHideDuration: 1000,
+                redirectToPath: '/login'
             });
-
         } catch (error) {
             console.error(`Error in signup: ${error.message}`);
             showSnackbar({

@@ -24,7 +24,7 @@ const darkTheme = createTheme({
   },
 });
 
-const Layout = ({ children }) => {
+const Layout = ({ children, showSnackbar }) => {
   const location = useLocation();
 
   // Routes where Sidebar and Navbar should not be shown
@@ -34,8 +34,8 @@ const Layout = ({ children }) => {
     <>
       {!noSidebarNavbarRoutes.includes(location.pathname) && (
         <>
-          <Sidebar />
-          <Navbar />
+          <Sidebar showSnackbar={showSnackbar} />
+          <Navbar showSnackbar={showSnackbar} />
         </>
       )}
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -81,7 +81,7 @@ function App() {
                 <Route
                   path="/home"
                   element={
-                    <Layout>
+                    <Layout showSnackbar={showSnackbar}>
                       <Dashboard showSnackbar={showSnackbar} />
                     </Layout>
                   }
@@ -89,7 +89,7 @@ function App() {
                 <Route
                   path="/orders"
                   element={
-                    <Layout>
+                    <Layout showSnackbar={showSnackbar}>
                       <OrdersPage showSnackbar={showSnackbar} />
                     </Layout>
                   }
@@ -97,7 +97,7 @@ function App() {
                 <Route
                   path="/tasks"
                   element={
-                    <Layout>
+                    <Layout showSnackbar={showSnackbar}>
                       <TaskBoard showSnackbar={showSnackbar} />
                     </Layout>
                   }
@@ -105,7 +105,7 @@ function App() {
                 <Route
                   path="/wallet"
                   element={
-                    <Layout>
+                    <Layout showSnackbar={showSnackbar}>
                       <WalletPage />
                     </Layout>
                   }
@@ -113,7 +113,7 @@ function App() {
                 <Route
                   path="/add-order"
                   element={
-                    <Layout>
+                    <Layout showSnackbar={showSnackbar}>
                       <AddOrderForm showSnackbar={showSnackbar} />
                     </Layout>
                   }
