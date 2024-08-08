@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 const Signup = ({ showSnackbar }) => {
-    const BASEURL = "http://localhost:5000"
+    const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
     const navigate = useNavigate();
     const [signupData, setSignupData] = useState({
         username: '',

@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext';
 
 
 const TaskBoard = ({ showSnackbar }) => {
-  const BASEURL = "http://localhost:5000"
+  const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
   const { token } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
@@ -76,7 +76,7 @@ const TaskBoard = ({ showSnackbar }) => {
   const updateTask = async (taskObj) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/api/tasks/update/${taskObj._id}`,
+        BASEURL + `api/tasks/update/${taskObj._id}`,
         taskObj,
         { headers: { 'x-auth-token': token } }
       );

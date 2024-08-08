@@ -4,7 +4,7 @@ import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 
 const AddOrderForm = ({ showSnackbar }) => {
-  const BASEURL = "http://localhost:5000"
+  const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
   const { token } = useContext(AuthContext)
   const [orderData, setOrderData] = useState({
     customerName: '',

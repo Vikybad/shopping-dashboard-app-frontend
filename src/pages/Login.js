@@ -6,8 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
+
+
 const Login = ({ showSnackbar }) => {
-  const BASEURL = "http://localhost:5000"
+  const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
   const [loginData, setLoginData] = useState({ login: '', password: '' });
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
@@ -34,7 +36,7 @@ const Login = ({ showSnackbar }) => {
       });
 
     } catch (error) {
-      console.error(`Error in signup: ${error.message}`);
+      console.error(`Error in login: ${error.message}`);
       showSnackbar({
         message: `Login failed: ${error.message}`,
         severity: 'error',

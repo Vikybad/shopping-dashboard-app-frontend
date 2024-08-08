@@ -6,7 +6,7 @@ import {
 import { AuthContext } from '../contexts/AuthContext';
 
 const OrderList = ({ showSnackbar }) => {
-  const BASEURL = "http://localhost:5000"
+  const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
   const [orders, setOrders] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -61,7 +61,7 @@ const OrderList = ({ showSnackbar }) => {
 
   const handleStatusChange = async () => {
     try {
-      const url = `http://localhost:5000/api/orders/orderNumber/${selectedOrder.orderNumber}`;
+      const url = BASEURL + `api/orders/orderNumber/${selectedOrder.orderNumber}`;
       await axios.post(url, { deliveryStatus: newStatus }, { headers: { 'x-auth-token': token } });
 
       await getOrders();

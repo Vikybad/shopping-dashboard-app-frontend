@@ -50,7 +50,7 @@ const PieChart = ({ percentage }) => {
 };
 
 const Dashboard = ({ showSnackbar }) => {
-  const BASEURL = "http://localhost:5000";
+  const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/";
   const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [netProfit, setNetProfit] = useState(0);
