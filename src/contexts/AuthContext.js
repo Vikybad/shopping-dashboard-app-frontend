@@ -8,6 +8,7 @@ const AuthProvider = ({ children }) => {
   // Load the token from local storage on component mount
   useEffect(() => {
     const savedToken = localStorage.getItem('authToken');
+    console.log('Loaded token from localStorage:', savedToken);
     if (savedToken) {
       setToken(savedToken);
     }

@@ -90,7 +90,7 @@ const Dashboard = ({ showSnackbar }) => {
   };
 
   useEffect(() => {
-    if (!loaded) {
+    if (!loaded && token) {
       getOrders();
     }
   }, [token, loaded]);
