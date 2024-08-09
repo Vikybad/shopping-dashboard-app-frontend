@@ -50,8 +50,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Navbar = ({ showSnackbar }) => {
 
-  // const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
-  const BASEURL = "http://localhost:5000/"
+  const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
+  // const BASEURL = "http://localhost:5000/"
 
   let { token } = useContext(AuthContext)
   const [anchorEl, setAnchorEl] = useState(null);

@@ -15,10 +15,19 @@ const Signup = ({ showSnackbar }) => {
         image: '',
     });
 
-    const handleChange = (e) => {
-        setSignupData({ ...signupData, [e.target.name]: e.target.value });
-    };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        // Limit mobile number to 10 digits and ensure it's numeric
+        if (name === 'mobileNumber') {
+            // Allow only numeric values and limit length
+            if (/^\d*$/.test(value) && value.length <= 10) {
+                setSignupData({ ...signupData, [name]: value });
+            }
+        } else {
+            setSignupData({ ...signupData, [name]: value });
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -76,6 +85,12 @@ const Signup = ({ showSnackbar }) => {
                 label="Mobile Number"
                 value={signupData.mobileNumber}
                 onChange={handleChange}
+                inputProps={{
+                    maxLength: 10,
+                    pattern: "[0-9]*", // Allow only numbers
+                    inputMode: "numeric" // Numeric keyboard on mobile
+                }}
+                helperText="Enter up to 10 digits"
             />
             <TextField
                 fullWidth
