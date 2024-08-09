@@ -1,70 +1,100 @@
-# Getting Started with Create React App
+# shopping-dashboard-app-frontend
+This a React based shopping app responsive in web and mobile view both
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Basic info about this project
+- Built using React.js for a dynamic and responsive user interface.
+- Enhanced UI components with Material-UI for a polished look and feel.
+- Implemented createContext hook for maintaining stable session authorization.
+- Containerized with Docker for consistent deployment across environments.
+- Set up CI/CD pipeline using Netlify for automated frontend deployment.
 
-## Available Scripts
 
-In the project directory, you can run:
+#### Use the below link for frontend of this web application
+ [http://github.com/Vikybad/shopping-dashboard-app-backend](http://github.com/Vikybad/shopping-dashboard-app-backend)
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Here in each component where there is any api call for signup, signin, get or update orders or tasks,
+  the base url is the hosted url on [railway](http://railway.app).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+If you want to run and use the backend server hosted on your machine,
+  you need to update the ``` BASEURL ``` in each component.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### Technologies Used
+<!-- List the technologies used with badges -->
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![Express](https://img.shields.io/badge/Express%20Server-grey?style=for-the-badge&logo=express)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<!-- Instructions to get a local copy up and running -->
+To get a local copy up and running, follow these simple steps.
 
-### `npm run eject`
+### Prerequisites
+<!-- List necessary software prerequisites -->
+Ensure you have the following software installed:
+- `mongoDB`, `Node.js` and `npm`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<!-- Step-by-step installation instructions -->
+Clone the repo to get started
+```sh
+git@github.com:Vikybad/shopping-dashboard-app-frontend.git
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## To run the frontend server on your local machine after cloning the repo
+1. Navigate to the frontend directory
+   ```sh
+   cd shopping-dashboard-app-frontend
+   ```
+2. install the dependencies for frontend
+   ```sh
+   npm install
+   ```
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Usage
+<!-- Instructions on how to run the frontend server -->
+- To run the frontend run the following command:
+```sh
+npm start
+```
+and you will be auto redirected to your browser on ``` http://localhost:3000 ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+<!-- Contribution guidelines -->
+We welcome contributions from all developers and power users! To add new features or suggest improvements, follow these steps:
 
-### Analyzing the Bundle Size
+1. Fork this repository to your own GitHub account.
+2. Clone the forked repository to your local machine.
+3. Create a new branch for your changes: `git checkout -b feature/add-new-feature`
+4. Make your changes to the `README.md` file or add new files as necessary.
+5. Commit your changes: `git commit -m "Add new feature for XYZ"`
+6. Push the changes to your GitHub fork: `git push origin feature/add-new-feature`
+7. Open a pull request from your forked repository to this original repository.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Contact
 
-### Advanced Configuration
+<!-- Contact information -->
+- **Email**: [08.vikrambadesara@gmail.com](mailto:ranitmanik.dev@gmail.com)
+- **LinkedIn**: [Vikram Badesara](https://www.linkedin.com/in/vikrambadesara/)
+- **GitHub**: [Vikybad](https://github.com/Vikybad/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+_Feel free to reach out if you have questions or just want to chat about web adventures!_
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+<!-- Closing message -->
+<p align="center">
+    Thank you for using the <strong>README Template</strong>! Happy coding! 🚀
+</p>
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
