@@ -7,6 +7,8 @@ import { AuthContext } from '../contexts/AuthContext';
 
 const OrderList = ({ showSnackbar }) => {
   const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
+
+  const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -27,6 +29,7 @@ const OrderList = ({ showSnackbar }) => {
     try {
       const res = await axios.get(BASEURL + 'api/orders/get-orders', { headers: { 'x-auth-token': token } });
       setOrders(res.data);
+      setLoaded(true)
     } catch (error) {
       console.error('Error fetching orders', error);
       let errorMssgFromApi = error?.response?.data?.msg
@@ -40,12 +43,11 @@ const OrderList = ({ showSnackbar }) => {
   }
 
   useEffect(() => {
-    const fetchOrders = () => {
+    if (!loaded && token) {
+      setLoaded(true)
       getOrders();
-    };
-    // if (token) 
-    fetchOrders();
-  }, [token, getOrders]);
+    }
+  }, [token]);
 
   const handleOpenDialog = (order) => {
     setSelectedOrder(order);
@@ -60,6 +62,7 @@ const OrderList = ({ showSnackbar }) => {
   };
 
   const handleStatusChange = async () => {
+    console.log(`HIT on Status change`);
     try {
       const url = BASEURL + `api/orders/orderNumber/${selectedOrder.orderNumber}`;
       await axios.post(url, { deliveryStatus: newStatus }, { headers: { 'x-auth-token': token } });
