@@ -62,6 +62,7 @@ const Signup = ({ showSnackbar }) => {
                 Signup
             </Typography>
             <TextField
+                required
                 fullWidth
                 margin="normal"
                 name="username"
@@ -70,6 +71,7 @@ const Signup = ({ showSnackbar }) => {
                 onChange={handleChange}
             />
             <TextField
+                required
                 fullWidth
                 margin="normal"
                 name="email"
@@ -79,6 +81,7 @@ const Signup = ({ showSnackbar }) => {
                 onChange={handleChange}
             />
             <TextField
+                required
                 fullWidth
                 margin="normal"
                 name="mobileNumber"
@@ -93,6 +96,7 @@ const Signup = ({ showSnackbar }) => {
                 helperText="Enter up to 10 digits"
             />
             <TextField
+                required
                 fullWidth
                 margin="normal"
                 name="password"
@@ -101,6 +105,7 @@ const Signup = ({ showSnackbar }) => {
                 value={signupData.password}
                 onChange={handleChange}
             />
+            {/* TODO: Add Confirm password */}
             {/* <TextField
                 fullWidth
                 margin="normal"

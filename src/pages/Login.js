@@ -55,6 +55,7 @@ const Login = ({ showSnackbar }) => {
         Login
       </Typography>
       <TextField
+        required
         fullWidth
         margin="normal"
         name="login"
@@ -63,6 +64,7 @@ const Login = ({ showSnackbar }) => {
         onChange={handleChange}
       />
       <TextField
+        required
         fullWidth
         margin="normal"
         name="password"
