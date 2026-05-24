@@ -113,7 +113,7 @@ const TaskBoard = ({ showSnackbar }) => {
       }
     };
     loadTasks();
-  }, []);
+  }, [fetchTasks]);
 
   const handleAddTask = async () => {
     if (newTask.trim() !== '') {
