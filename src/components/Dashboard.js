@@ -93,7 +93,7 @@ const Dashboard = ({ showSnackbar }) => {
     if (!loaded && token) {
       getOrders();
     }
-  }, [token, loaded]);
+  }, [token, loaded, getOrders]);
 
   return (
     <Box component="main" sx={{ flexGrow: 1, pl: 9, pt: 8 }}>
