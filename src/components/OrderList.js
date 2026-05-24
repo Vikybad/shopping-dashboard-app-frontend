@@ -47,7 +47,7 @@ const OrderList = ({ showSnackbar }) => {
       setLoaded(true)
       getOrders();
     }
-  }, [token]);
+  }, [token, getOrders]);
 
   const handleOpenDialog = (order) => {
     setSelectedOrder(order);
