@@ -6,7 +6,7 @@ import {
 import { AuthContext } from '../contexts/AuthContext';
 
 const OrderList = ({ showSnackbar }) => {
-  const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
+  const BASEURL = process.env.REACT_APP_BACKEND_BASE_URL || "https://shopping-dashboard-backend-production.up.railway.app/"
 
   const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);

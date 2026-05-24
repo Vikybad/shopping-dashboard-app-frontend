@@ -9,7 +9,8 @@ import axios from 'axios';
 
 
 const Login = ({ showSnackbar }) => {
-  const BASEURL = "https://shopping-dashboard-backend-production.up.railway.app/"
+  const BASEURL = process.env.REACT_APP_BACKEND_BASE_URL || "https://shopping-dashboard-backend-production.up.railway.app/"
+  console.log(`REACT_APP_BACKEND_BASE_URL: ${BASEURL}`)
   const [loginData, setLoginData] = useState({ login: '', password: '' });
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
