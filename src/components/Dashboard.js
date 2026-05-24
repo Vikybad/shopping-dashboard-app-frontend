@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { Box, Grid, Typography, Card, CardContent } from '@mui/material';
 import SummaryCard from './SummaryCard';
@@ -7,6 +7,7 @@ import RecentOrders from './RecentOrders';
 import CustomerFeedback from './CustomerFeedback';
 import GoalsList from './GoalsList';
 import { AuthContext } from '../contexts/AuthContext';
+const BASEURL = process.env.REACT_APP_BACKEND_BASE_URL || "https://shopping-dashboard-backend-production.up.railway.app/";
 
 const PieChart = ({ percentage }) => {
   const radius = 30;
@@ -50,21 +51,20 @@ const PieChart = ({ percentage }) => {
 };
 
 const Dashboard = ({ showSnackbar }) => {
-  const BASEURL = process.env.REACT_APP_BACKEND_BASE_URL || "https://shopping-dashboard-backend-production.up.railway.app/";
   const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [netProfit, setNetProfit] = useState(0);
   const [progress, setProgress] = useState(0);
   const { token } = useContext(AuthContext);
 
-  const sessionExpired = () => {
+  const sessionExpired = useCallback(() => {
     showSnackbar({
-      message: `Session expired, please signin again`,
+      message: 'Session expired, please signin again',
       severity: 'error',
       autoHideDuration: 500,
       redirectToPath: '/login'
     });
-  };
+  }, [showSnackbar]);
 
   
   useEffect(() => {
@@ -93,7 +93,7 @@ const Dashboard = ({ showSnackbar }) => {
     if (!loaded && token) {
       getOrders();
     }
-  }, [token, loaded]);
+  }, [token, loaded, showSnackbar, sessionExpired]);
 
   return (
     <Box component="main" sx={{ flexGrow: 1, pl: 9, pt: 8 }}>

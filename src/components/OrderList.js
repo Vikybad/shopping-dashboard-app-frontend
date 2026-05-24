@@ -4,9 +4,9 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
+const BASEURL = process.env.REACT_APP_BACKEND_BASE_URL || "https://shopping-dashboard-backend-production.up.railway.app/"
 
 const OrderList = ({ showSnackbar }) => {
-  const BASEURL = process.env.REACT_APP_BACKEND_BASE_URL || "https://shopping-dashboard-backend-production.up.railway.app/"
 
   const [loaded, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
@@ -15,18 +15,17 @@ const OrderList = ({ showSnackbar }) => {
   const [newStatus, setNewStatus] = useState('');
   const { token } = useContext(AuthContext);
 
-  const sessionExpired = () => {
-    showSnackbar({
-      message: `Session expired, please signin again`,
-      severity: 'error',
-      autoHideDuration: 500,
-      redirectToPath: '/login'
-    });
-  }
-
-
   
   useEffect(() => {
+    const sessionExpired = () => {
+      showSnackbar({
+        message: `Session expired, please signin again`,
+        severity: 'error',
+        autoHideDuration: 500,
+        redirectToPath: '/login'
+      });
+    }
+
     const getOrders = async () => {
       try {
         const res = await axios.get(BASEURL + 'api/orders/get-orders', { headers: { 'x-auth-token': token } });
@@ -48,7 +47,7 @@ const OrderList = ({ showSnackbar }) => {
       setLoaded(true)
       getOrders();
     }
-  }, [token]);
+  }, [token, loaded, showSnackbar]);
 
   const handleOpenDialog = (order) => {
     setSelectedOrder(order);
@@ -63,6 +62,16 @@ const OrderList = ({ showSnackbar }) => {
   };
 
   const handleStatusChange = async () => {
+
+    const sessionExpired = () => {
+      showSnackbar({
+        message: `Session expired, please signin again`,
+        severity: 'error',
+        autoHideDuration: 500,
+        redirectToPath: '/login'
+      });
+    }
+
     const getOrders = async () => {
       try {
         const res = await axios.get(BASEURL + 'api/orders/get-orders', { headers: { 'x-auth-token': token } });

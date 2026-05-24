@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Card, CardContent, Typography, List, ListItem, ListItemText, Checkbox, TextField, Button, Box } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -12,14 +12,17 @@ const TaskBoard = ({ showSnackbar }) => {
   const [newTask, setNewTask] = useState('');
 
 
-  const snackBarMssg = (message, severity = 'error', redirectToPath = '') => {
-    showSnackbar({
-      message: message,
-      severity: severity,
-      autoHideDuration: 500,
-      redirectToPath: redirectToPath
-    });
-  }
+  const snackBarMssg = useCallback(
+    (message, severity = 'error', redirectToPath = '') => {
+      showSnackbar({
+        message,
+        severity,
+        autoHideDuration: 500,
+        redirectToPath
+      });
+    },
+    [showSnackbar]
+  );
 
 
   const saveTask = async (newTaskObj) => {
@@ -111,7 +114,7 @@ const TaskBoard = ({ showSnackbar }) => {
       }
     };
     loadTasks();
-  }, []);
+  }, [snackBarMssg, token, BASEURL]);
 
   const handleAddTask = async () => {
     if (newTask.trim() !== '') {
