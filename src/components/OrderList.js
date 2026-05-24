@@ -25,29 +25,30 @@ const OrderList = ({ showSnackbar }) => {
   }
 
 
-  const getOrders = async () => {
-    try {
-      const res = await axios.get(BASEURL + 'api/orders/get-orders', { headers: { 'x-auth-token': token } });
-      setOrders(res.data);
-      setLoaded(true)
-    } catch (error) {
-      console.error('Error fetching orders', error);
-      let errorMssgFromApi = error?.response?.data?.msg
-      if (errorMssgFromApi) {
-        console.log('errorMssgFromApi to get orders', errorMssgFromApi);
-        if (errorMssgFromApi === "No token, authorization denied") {
-          return sessionExpired();
+  
+  useEffect(() => {
+    const getOrders = async () => {
+      try {
+        const res = await axios.get(BASEURL + 'api/orders/get-orders', { headers: { 'x-auth-token': token } });
+        setOrders(res.data);
+        setLoaded(true)
+      } catch (error) {
+        console.error('Error fetching orders', error);
+        let errorMssgFromApi = error?.response?.data?.msg
+        if (errorMssgFromApi) {
+          console.log('errorMssgFromApi to get orders', errorMssgFromApi);
+          if (errorMssgFromApi === "No token, authorization denied") {
+            return sessionExpired();
+          }
         }
       }
     }
-  }
 
-  useEffect(() => {
     if (!loaded && token) {
       setLoaded(true)
       getOrders();
     }
-  }, [token, getOrders]);
+  }, [token]);
 
   const handleOpenDialog = (order) => {
     setSelectedOrder(order);
@@ -62,6 +63,23 @@ const OrderList = ({ showSnackbar }) => {
   };
 
   const handleStatusChange = async () => {
+    const getOrders = async () => {
+      try {
+        const res = await axios.get(BASEURL + 'api/orders/get-orders', { headers: { 'x-auth-token': token } });
+        setOrders(res.data);
+        setLoaded(true)
+      } catch (error) {
+        console.error('Error fetching orders', error);
+        let errorMssgFromApi = error?.response?.data?.msg
+        if (errorMssgFromApi) {
+          console.log('errorMssgFromApi to get orders', errorMssgFromApi);
+          if (errorMssgFromApi === "No token, authorization denied") {
+            return sessionExpired();
+          }
+        }
+      }
+    }
+
     console.log(`HIT on Status change`);
     try {
       const url = BASEURL + `api/orders/orderNumber/${selectedOrder.orderNumber}`;

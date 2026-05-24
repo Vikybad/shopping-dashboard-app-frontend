@@ -72,39 +72,37 @@ const TaskBoard = ({ showSnackbar }) => {
 
     }
   }
-
-  const fetchTasks = async () => {
-    try {
-      const response = await axios.get(BASEURL + 'api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
-      if (response?.data?.msg) throw new Error(response.data.msg);
-      if (Array.isArray(response?.data)) {
-        let tasksList = response?.data
-        if (tasksList?.length) {
-          tasksList = tasksList?.map(v => ({
-            ...v,
-            id: v._id
-          }))
-        }
-        return setTasks(tasksList);
-      }
-      snackBarMssg('Task added successfully...', 'success')
-    } catch (error) {
-      console.error(`Error in adding task to db: ${error.message}`);
-      // snackBarMssg(`Failed: ${error.message}`, 'error')
-      let errorMssgFromApi = error?.response?.data?.msg
-      if (errorMssgFromApi) {
-        console.log('errorMssgFromApi to get tasks: ', errorMssgFromApi);
-        if (errorMssgFromApi === "No token, authorization denied") {
-          return snackBarMssg('Session expired', 'error', '/login');
-        }
-      }
-      console.log('error', error);
-    }
-  }
-
-
+  
   // Fetch tasks from the API when the component mounts
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get(BASEURL + 'api/tasks/get-tasks', { headers: { 'x-auth-token': token } });
+        if (response?.data?.msg) throw new Error(response.data.msg);
+        if (Array.isArray(response?.data)) {
+          let tasksList = response?.data
+          if (tasksList?.length) {
+            tasksList = tasksList?.map(v => ({
+              ...v,
+              id: v._id
+            }))
+          }
+          return setTasks(tasksList);
+        }
+        snackBarMssg('Task added successfully...', 'success')
+      } catch (error) {
+        console.error(`Error in adding task to db: ${error.message}`);
+        // snackBarMssg(`Failed: ${error.message}`, 'error')
+        let errorMssgFromApi = error?.response?.data?.msg
+        if (errorMssgFromApi) {
+          console.log('errorMssgFromApi to get tasks: ', errorMssgFromApi);
+          if (errorMssgFromApi === "No token, authorization denied") {
+            return snackBarMssg('Session expired', 'error', '/login');
+          }
+        }
+        console.log('error', error);
+      }
+    }
     const loadTasks = async () => {
       try {
         await fetchTasks();
@@ -113,7 +111,7 @@ const TaskBoard = ({ showSnackbar }) => {
       }
     };
     loadTasks();
-  }, [fetchTasks]);
+  }, []);
 
   const handleAddTask = async () => {
     if (newTask.trim() !== '') {

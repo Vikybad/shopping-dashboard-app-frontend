@@ -66,34 +66,34 @@ const Dashboard = ({ showSnackbar }) => {
     });
   };
 
-  const getOrders = async () => {
-    try {
-      const response = await axios.get(BASEURL + 'api/orders/get-orders', {
-        headers: { 'x-auth-token': token },
-      });
-      setOrders(response.data);
-      // Calculate net profit based on orders data
-      setNetProfit(6759.25);
-      // Calculate progress based on net profit and goal
-      setProgress(70);
-      setLoaded(true);
-    } catch (error) {
-      const errorMssgFromApi = error?.response?.data?.msg;
-      if (errorMssgFromApi) {
-        console.log('errorMssgFromApi to get orders', errorMssgFromApi);
-        if (errorMssgFromApi === "No token, authorization denied") {
-          return sessionExpired();
-        }
-      }
-      console.log('error', error);
-    }
-  };
-
+  
   useEffect(() => {
+    const getOrders = async () => {
+      try {
+        const response = await axios.get(BASEURL + 'api/orders/get-orders', {
+          headers: { 'x-auth-token': token },
+        });
+        setOrders(response.data);
+        // Calculate net profit based on orders data
+        setNetProfit(6759.25);
+        // Calculate progress based on net profit and goal
+        setProgress(70);
+        setLoaded(true);
+      } catch (error) {
+        const errorMssgFromApi = error?.response?.data?.msg;
+        if (errorMssgFromApi) {
+          console.log('errorMssgFromApi to get orders', errorMssgFromApi);
+          if (errorMssgFromApi === "No token, authorization denied") {
+            return sessionExpired();
+          }
+        }
+        console.log('error', error);
+      }
+    };
     if (!loaded && token) {
       getOrders();
     }
-  }, [token, loaded, getOrders]);
+  }, [token, loaded]);
 
   return (
     <Box component="main" sx={{ flexGrow: 1, pl: 9, pt: 8 }}>

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Box, Menu, MenuItem, Divider } from '@mui/material';
+import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Box, Menu, MenuItem } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import MailIcon from '@mui/icons-material/Mail';
@@ -90,12 +90,6 @@ const Navbar = ({ showSnackbar }) => {
     // Implement user deletion logic here
     deleteUser()
     console.log('Delete user');
-    handleClose();
-  };
-
-  const handleUpdateUser = () => {
-    // Implement user update logic here
-    console.log('Update user info');
     handleClose();
   };
 
