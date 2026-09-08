@@ -1,14 +1,15 @@
 # Use the official Node.js image as the base image
-FROM node:18 AS build
+FROM node:22-alpine AS build
 
 # Set the working directory in the container
-WORKDIR /usr/src/frontend
+WORKDIR /app
 
-# Copy the application data
+COPY package*.json ./
+RUN npm ci
 COPY . .
 
-# Install dependencies
-RUN npm install
+ARG VITE_API_URL=http://localhost:5000/api
+ENV VITE_API_URL=$VITE_API_URL
 
 # Build the React application
 RUN npm run build
@@ -17,7 +18,8 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy the build files from the previous stage
-COPY --from=build /usr/src/frontend/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80

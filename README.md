@@ -1,100 +1,69 @@
-# shopping-dashboard-app-frontend
-This a React based shopping app responsive in web and mobile view both
+# Shopboard Admin
 
-## Basic info about this project
-- Built using React.js for a dynamic and responsive user interface.
-- Enhanced UI components with Material-UI for a polished look and feel.
-- Implemented createContext hook for maintaining stable session authorization.
-- Containerized with Docker for consistent deployment across environments.
-- Set up CI/CD pipeline using Netlify for automated frontend deployment.
+A responsive React operations console for store owners. The application is backed entirely by live API data—there are no hard-coded KPIs or chart series.
 
+## Product surface
 
-#### Use the below link for frontend of this web application
- [http://github.com/Vikybad/shopping-dashboard-app-backend](http://github.com/Vikybad/shopping-dashboard-app-backend)
+- Secure sign-up/sign-in and protected application routes
+- Live dashboard with revenue, orders, profit, inventory value, fulfilment mix, 14-day trend, recent orders, and low-stock watchlist
+- Searchable, paginated order management with controlled status transitions
+- Product catalogue with pricing, cost, reorder thresholds, low/out-of-stock filters, edits, stock adjustments, and archival
+- Multi-line order creation using authoritative inventory price and stock data
+- Persisted operational task board
+- Responsive desktop/mobile navigation, loading/empty/error states, and accessible form/table controls
 
+## Stack
 
-Here in each component where there is any api call for signup, signin, get or update orders or tasks,
-  the base url is the hosted url on [railway](http://railway.app).
+- React 18, React Router, Material UI, Recharts, and Axios
+- Vite for development/production builds and Vitest + Testing Library for tests
+- Nginx production container with SPA route fallback
 
-If you want to run and use the backend server hosted on your machine,
-  you need to update the ``` BASEURL ``` in each component.
+## Local setup
 
+Start the API first, then:
 
-
-### Technologies Used
-<!-- List the technologies used with badges -->
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![Express](https://img.shields.io/badge/Express%20Server-grey?style=for-the-badge&logo=express)
-
-
-
-<!-- Instructions to get a local copy up and running -->
-To get a local copy up and running, follow these simple steps.
-
-### Prerequisites
-<!-- List necessary software prerequisites -->
-Ensure you have the following software installed:
-- `mongoDB`, `Node.js` and `npm`
-
-
-<!-- Step-by-step installation instructions -->
-Clone the repo to get started
-```sh
-git@github.com:Vikybad/shopping-dashboard-app-frontend.git
+```bash
+cp .env.example .env
+npm ci
+npm run dev
 ```
 
+Open `http://localhost:3000`.
 
-## To run the frontend server on your local machine after cloning the repo
-1. Navigate to the frontend directory
-   ```sh
-   cd shopping-dashboard-app-frontend
-   ```
-2. install the dependencies for frontend
-   ```sh
-   npm install
-   ```
+`VITE_API_URL` must include the `/api` prefix, for example:
 
-
-## Usage
-<!-- Instructions on how to run the frontend server -->
-- To run the frontend run the following command:
-```sh
-npm start
+```dotenv
+VITE_API_URL=http://localhost:5000/api
 ```
-and you will be auto redirected to your browser on ``` http://localhost:3000 ```
 
+For a production build, environment values are injected at build time.
 
-## Contributing
+## Quality commands
 
-<!-- Contribution guidelines -->
-We welcome contributions from all developers and power users! To add new features or suggest improvements, follow these steps:
+```bash
+npm test
+npm run build
+npm run check
+npm run audit
+```
 
-1. Fork this repository to your own GitHub account.
-2. Clone the forked repository to your local machine.
-3. Create a new branch for your changes: `git checkout -b feature/add-new-feature`
-4. Make your changes to the `README.md` file or add new files as necessary.
-5. Commit your changes: `git commit -m "Add new feature for XYZ"`
-6. Push the changes to your GitHub fork: `git push origin feature/add-new-feature`
-7. Open a pull request from your forked repository to this original repository.
+## Docker
 
+Build the frontend against the deployed API URL:
 
+```bash
+docker build --build-arg VITE_API_URL=https://api.example.com/api -t shopboard-admin .
+docker run --rm -p 8080:80 shopboard-admin
+```
 
-## Contact
+Nginx serves the built SPA and routes browser refreshes back to `index.html`.
 
-<!-- Contact information -->
-- **Email**: [08.vikrambadesara@gmail.com](mailto:ranitmanik.dev@gmail.com)
-- **LinkedIn**: [Vikram Badesara](https://www.linkedin.com/in/vikrambadesara/)
-- **GitHub**: [Vikybad](https://github.com/Vikybad/)
+## Backend contract
 
-_Feel free to reach out if you have questions or just want to chat about web adventures!_
+The application expects consistent API responses:
 
----
+- item: `{ "data": { ... } }`
+- collection: `{ "data": [...], "pagination": { ... } }`
+- error: `{ "message": "...", "code": "..." }`
 
-<!-- Closing message -->
-<p align="center">
-    Thank you for using the <strong>README Template</strong>! Happy coding! 🚀
-</p>
-
+Authentication uses `Authorization: Bearer <token>` and an expired session is cleared centrally by the API client.
