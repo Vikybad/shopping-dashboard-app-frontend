@@ -44,10 +44,12 @@ In the frontend Netlify site:
 
 1. Set this repository directory as the site base.
 2. Set `VITE_API_URL=/api`.
-3. Set `BACKEND_SERVICE_URL` to the backend Netlify site origin, for example `https://shopboard-api.netlify.app`—do not add `/api` unless you intentionally want to; both forms are supported.
+3. Set `BACKEND_SERVICE_URL` to the backend Netlify site origin, for example `https://shopboard-api.netlify.app`—do not add `/api` unless you intentionally want to; both forms are supported. The old `REACT_APP_BACKEND_BASE_URL` is accepted temporarily as a fallback.
 4. Deploy. `/api/*` goes to the proxy Function and all other unknown paths fall back to the React application.
 
 The proxy is important: the browser talks only to the frontend origin, allowing the backend's secure refresh cookie to remain first-party. The Function forwards authorization, upload bodies, downloads, and `Set-Cookie` headers to/from the backend service.
+
+Node 22.22.2 is pinned in `netlify.toml` because Vite 8 and its build toolchain do not run on the Node 18 default used by older Netlify sites.
 
 ## CSV workflow
 

@@ -15,7 +15,7 @@ function queryString(event) {
 }
 
 exports.handler = async (event) => {
-  const configuredBackend = process.env.BACKEND_SERVICE_URL;
+  const configuredBackend = process.env.BACKEND_SERVICE_URL || process.env.REACT_APP_BACKEND_BASE_URL;
   if (!configuredBackend) return { statusCode: 503, body: JSON.stringify({ message: 'Backend service URL is not configured.', code: 'PROXY_NOT_CONFIGURED' }), headers: { 'content-type': 'application/json' } };
   const base = configuredBackend.replace(/\/$/, '');
   const prefix = base.endsWith('/api') ? base : `${base}/api`;
