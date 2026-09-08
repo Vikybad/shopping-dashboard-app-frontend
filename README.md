@@ -1,100 +1,88 @@
-# shopping-dashboard-app-frontend
-This a React based shopping app responsive in web and mobile view both
+# Shopboard Admin
 
-## Basic info about this project
-- Built using React.js for a dynamic and responsive user interface.
-- Enhanced UI components with Material-UI for a polished look and feel.
-- Implemented createContext hook for maintaining stable session authorization.
-- Containerized with Docker for consistent deployment across environments.
-- Set up CI/CD pipeline using Netlify for automated frontend deployment.
+Responsive operations console for store owners, backed entirely by live API data.
 
+## Product surface
 
-#### Use the below link for frontend of this web application
- [http://github.com/Vikybad/shopping-dashboard-app-backend](http://github.com/Vikybad/shopping-dashboard-app-backend)
+- Secure signup/sign-in with short-lived, memory-only access tokens and rotating HttpOnly refresh sessions
+- Email OTP password recovery
+- Revenue, order, profit, inventory-value, fulfilment, trend, recent-order, and low-stock analytics
+- Searchable and paginated orders with controlled status progression
+- Catalogue pricing, cost, reorder thresholds, filters, editing, stock adjustments, and archival
+- Multi-line order creation from authoritative inventory pricing and availability
+- Product and order CSV templates, atomic uploads, and CSV exports
+- One-click realistic sample workspace for empty accounts
+- Persisted operational task board
+- Password-protected data reset and permanent account deletion in a dedicated danger zone
+- Daily/weekly email report surface shown as paused; no schedules or report sends run yet
+- Responsive desktop/mobile navigation and explicit loading, empty, success, and error states
 
+## Stack
 
-Here in each component where there is any api call for signup, signin, get or update orders or tasks,
-  the base url is the hosted url on [railway](http://railway.app).
+- React 18, React Router, Material UI, Recharts, and Axios
+- Vite for development and production builds
+- Vitest and Testing Library for tests
+- Netlify static hosting plus a same-origin backend proxy Function
 
-If you want to run and use the backend server hosted on your machine,
-  you need to update the ``` BASEURL ``` in each component.
+## Local development
 
+Start the backend on port 5000, then:
 
-
-### Technologies Used
-<!-- List the technologies used with badges -->
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![Express](https://img.shields.io/badge/Express%20Server-grey?style=for-the-badge&logo=express)
-
-
-
-<!-- Instructions to get a local copy up and running -->
-To get a local copy up and running, follow these simple steps.
-
-### Prerequisites
-<!-- List necessary software prerequisites -->
-Ensure you have the following software installed:
-- `mongoDB`, `Node.js` and `npm`
-
-
-<!-- Step-by-step installation instructions -->
-Clone the repo to get started
-```sh
-git@github.com:Vikybad/shopping-dashboard-app-frontend.git
+```bash
+cp .env.example .env
+npm ci
+npm run dev
 ```
 
+Open `http://localhost:3000`. Vite proxies `/api/*` to `http://127.0.0.1:5000`, so the default `VITE_API_URL=/api` works locally and in production.
 
-## To run the frontend server on your local machine after cloning the repo
-1. Navigate to the frontend directory
-   ```sh
-   cd shopping-dashboard-app-frontend
-   ```
-2. install the dependencies for frontend
-   ```sh
-   npm install
-   ```
+## Netlify deployment
 
+This repository includes [`netlify.toml`](./netlify.toml) and [`netlify/functions/backend-proxy.js`](./netlify/functions/backend-proxy.js).
 
-## Usage
-<!-- Instructions on how to run the frontend server -->
-- To run the frontend run the following command:
-```sh
-npm start
+In the frontend Netlify site:
+
+1. Set this repository directory as the site base.
+2. Set `VITE_API_URL=/api`.
+3. Set `BACKEND_SERVICE_URL` to the backend Netlify site origin, for example `https://shopboard-api.netlify.app`—do not add `/api` unless you intentionally want to; both forms are supported. The old `REACT_APP_BACKEND_BASE_URL` is accepted temporarily as a fallback.
+4. Deploy. `/api/*` goes to the proxy Function and all other unknown paths fall back to the React application.
+
+The proxy is important: the browser talks only to the frontend origin, allowing the backend's secure refresh cookie to remain first-party. The Function forwards authorization, upload bodies, downloads, and `Set-Cookie` headers to/from the backend service.
+
+Node 22.22.2 is pinned in `netlify.toml` because Vite 8 and its build toolchain do not run on the Node 18 default used by older Netlify sites.
+
+## CSV workflow
+
+Open **Data & account** from the sidebar.
+
+- Download the product or order sample before preparing a file.
+- Import products before orders because order rows resolve existing SKUs.
+- Reuse an `order_reference` across rows to create a multi-line order.
+- Imports are all-or-nothing and limited to 2 MB and 500 rows.
+- Export current products and orders as CSV copies for analysis or migration. Order status history is not a full database restore format.
+
+## Authentication behavior
+
+The access token is held only in JavaScript memory. On a page refresh, the application uses the secure HttpOnly cookie to rotate the refresh session and obtain a new short-lived token. Nothing sensitive is stored in `localStorage`.
+
+Password recovery uses a six-digit OTP that expires after 10 minutes. A successful reset revokes all existing sessions.
+
+## Quality commands
+
+```bash
+npm test
+npm run build
+npm run check
+npm run audit
 ```
-and you will be auto redirected to your browser on ``` http://localhost:3000 ```
 
+## Docker
 
-## Contributing
+The existing Nginx image remains available when hosting outside Netlify:
 
-<!-- Contribution guidelines -->
-We welcome contributions from all developers and power users! To add new features or suggest improvements, follow these steps:
+```bash
+docker build --build-arg VITE_API_URL=https://api.example.com/api -t shopboard-admin .
+docker run --rm -p 8080:80 shopboard-admin
+```
 
-1. Fork this repository to your own GitHub account.
-2. Clone the forked repository to your local machine.
-3. Create a new branch for your changes: `git checkout -b feature/add-new-feature`
-4. Make your changes to the `README.md` file or add new files as necessary.
-5. Commit your changes: `git commit -m "Add new feature for XYZ"`
-6. Push the changes to your GitHub fork: `git push origin feature/add-new-feature`
-7. Open a pull request from your forked repository to this original repository.
-
-
-
-## Contact
-
-<!-- Contact information -->
-- **Email**: [08.vikrambadesara@gmail.com](mailto:ranitmanik.dev@gmail.com)
-- **LinkedIn**: [Vikram Badesara](https://www.linkedin.com/in/vikrambadesara/)
-- **GitHub**: [Vikybad](https://github.com/Vikybad/)
-
-_Feel free to reach out if you have questions or just want to chat about web adventures!_
-
----
-
-<!-- Closing message -->
-<p align="center">
-    Thank you for using the <strong>README Template</strong>! Happy coding! 🚀
-</p>
-
+For cross-origin deployments, configure backend CORS and cookie policy carefully. The checked-in Netlify proxy is the preferred deployment route.
