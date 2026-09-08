@@ -2,7 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import SummaryCard from './components/SummaryCard';
+import DataAccountPage from './components/DataAccountPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import ForgotPassword from './pages/ForgotPassword';
 import { AuthContext } from './contexts/AuthContext';
 import theme from './theme';
 import { formatCurrency, titleCase } from './utils/format';
@@ -33,4 +35,22 @@ test('redirects an anonymous visitor away from protected pages', () => {
   );
   expect(screen.getByText('Public sign in')).toBeInTheDocument();
   expect(screen.queryByText('Private dashboard')).not.toBeInTheDocument();
+});
+
+test('renders the email OTP recovery entry point', () => {
+  render(<ThemeProvider theme={theme}><MemoryRouter><ForgotPassword /></MemoryRouter></ThemeProvider>);
+  expect(screen.getByRole('heading', { name: 'Reset password' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Send reset code' })).toBeInTheDocument();
+});
+
+test('exposes imports, paused reports, and explicit danger-zone actions', () => {
+  render(
+    <AuthContext.Provider value={{ clearSession: vi.fn(), user: { storeName: 'Test Store' } }}>
+      <ThemeProvider theme={theme}><MemoryRouter><DataAccountPage /></MemoryRouter></ThemeProvider>
+    </AuthContext.Provider>,
+  );
+  expect(screen.getByRole('heading', { name: 'CSV imports' })).toBeInTheDocument();
+  expect(screen.getByText('Paused')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Reset all store data' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Delete account' })).toBeInTheDocument();
 });

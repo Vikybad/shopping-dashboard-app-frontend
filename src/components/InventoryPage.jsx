@@ -1,11 +1,12 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { AddRounded, ArchiveOutlined, EditOutlined, SearchRounded, TuneRounded } from '@mui/icons-material';
+import { AddRounded, ArchiveOutlined, EditOutlined, SearchRounded, TuneRounded, UploadFileRounded } from '@mui/icons-material';
 import {
   Alert, Box, Button, Card, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Grid,
   IconButton, InputAdornment, MenuItem, Snackbar, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TablePagination, TableRow, TextField, Tooltip, Typography,
 } from '@mui/material';
 import api, { getErrorMessage } from '../api/client';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { formatCurrency } from '../utils/format';
 
@@ -129,7 +130,7 @@ const InventoryPage = () => {
     <Box>
       <Box display="flex" flexWrap="wrap" justifyContent="space-between" alignItems="flex-end" gap={2} mb={3}>
         <Box><Typography variant="h4">Inventory</Typography><Typography color="text.secondary" mt={0.5}>{pagination.total.toLocaleString('en-IN')} active products</Typography></Box>
-        <Button variant="contained" startIcon={<AddRounded />} onClick={() => setProductDialog({ open: true, product: null })}>Add product</Button>
+        <Stack direction={{ xs: 'column', sm: 'row' }} gap={1.25} width={{ xs: '100%', sm: 'auto' }}><Button component={Link} to="/data" variant="outlined" startIcon={<UploadFileRounded />}>Import CSV</Button><Button variant="contained" startIcon={<AddRounded />} onClick={() => setProductDialog({ open: true, product: null })}>Add product</Button></Stack>
       </Box>
       <Card>
         <Box component="form" onSubmit={(event) => { event.preventDefault(); setPagination((current) => ({ ...current, page: 1 })); setQuery(search); }} sx={{ p: 2.5, display: 'flex', flexWrap: 'wrap', gap: 1.5, borderBottom: '1px solid #eceef4' }}>

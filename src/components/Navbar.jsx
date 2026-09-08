@@ -11,6 +11,7 @@ const titles = {
   '/orders/new': ['Create order', 'Build a new order from available inventory'],
   '/inventory': ['Inventory', 'Track products, stock levels, and value'],
   '/tasks': ['Operations tasks', 'Keep the team focused on what matters next'],
+  '/data': ['Data & account', 'Imports, backups, account controls, and report settings'],
 };
 
 const Navbar = ({ onMenu }) => {
@@ -20,9 +21,9 @@ const Navbar = ({ onMenu }) => {
   const [anchor, setAnchor] = useState(null);
   const [title, subtitle] = titles[location.pathname] || ['Shopboard', 'Operations console'];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setAnchor(null);
-    logout();
+    await logout();
     navigate('/login');
   };
 

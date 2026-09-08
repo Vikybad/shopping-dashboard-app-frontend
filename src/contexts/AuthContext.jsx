@@ -1,52 +1,59 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import api from '../api/client';
+import api, { refreshSession, setAccessToken } from '../api/client';
 
 const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => localStorage.getItem('authToken'));
-  const [user, setUser] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('authUser')); } catch { return null; }
-  });
-  const [loading, setLoading] = useState(Boolean(token) && !user);
+  const [user, setUser] = useState(null);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const logout = useCallback(() => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('authUser');
-    setToken(null);
+  const clearSession = useCallback(() => {
+    setAccessToken(null);
+    setAuthenticated(false);
     setUser(null);
     setLoading(false);
   }, []);
 
+  const logout = useCallback(async () => {
+    try {
+      await api.post('/users/logout', null, { skipAuthRefresh: true });
+    } catch {
+      // Local logout must still complete if the network is unavailable.
+    } finally {
+      clearSession();
+    }
+  }, [clearSession]);
+
   const login = useCallback((nextToken, nextUser) => {
-    localStorage.setItem('authToken', nextToken);
-    if (nextUser) localStorage.setItem('authUser', JSON.stringify(nextUser));
-    setToken(nextToken);
+    setAccessToken(nextToken);
+    setAuthenticated(Boolean(nextToken));
     setUser(nextUser || null);
-    setLoading(!nextUser);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
-    const handleExpiry = () => logout();
-    window.addEventListener('shopboard:session-expired', handleExpiry);
-    return () => window.removeEventListener('shopboard:session-expired', handleExpiry);
-  }, [logout]);
+    let active = true;
+    refreshSession()
+      .then(({ accessToken, user: nextUser }) => {
+        if (active) login(accessToken, nextUser);
+      })
+      .catch(() => {
+        if (active) clearSession();
+      });
+    return () => { active = false; };
+  }, [clearSession, login]);
 
   useEffect(() => {
-    if (!token || user) return;
-    let active = true;
-    api.get('/users/me')
-      .then(({ data }) => {
-        if (!active) return;
-        setUser(data.data);
-        localStorage.setItem('authUser', JSON.stringify(data.data));
-      })
-      .catch(() => active && logout())
-      .finally(() => active && setLoading(false));
-    return () => { active = false; };
-  }, [logout, token, user]);
+    const handleExpiry = () => clearSession();
+    window.addEventListener('shopboard:session-expired', handleExpiry);
+    return () => window.removeEventListener('shopboard:session-expired', handleExpiry);
+  }, [clearSession]);
 
-  const value = useMemo(() => ({ authenticated: Boolean(token), loading, login, logout, token, user }), [loading, login, logout, token, user]);
+  const value = useMemo(
+    () => ({ authenticated, clearSession, loading, login, logout, user }),
+    [authenticated, clearSession, loading, login, logout, user],
+  );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

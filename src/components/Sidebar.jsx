@@ -3,6 +3,7 @@ import {
   DashboardRounded,
   Inventory2Rounded,
   LocalShippingRounded,
+  SettingsRounded,
   TaskAltRounded,
 } from '@mui/icons-material';
 import { Box, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
@@ -16,6 +17,7 @@ const items = [
   { label: 'Inventory', icon: Inventory2Rounded, path: '/inventory' },
   { label: 'New order', icon: AddShoppingCartRounded, path: '/orders/new' },
   { label: 'Tasks', icon: TaskAltRounded, path: '/tasks' },
+  { label: 'Data & account', icon: SettingsRounded, path: '/data' },
 ];
 
 const SidebarContent = ({ onClose }) => (

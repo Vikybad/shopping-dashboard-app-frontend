@@ -1,25 +1,58 @@
 import axios from 'axios';
 
-const configuredUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const configuredUrl = import.meta.env.VITE_API_URL || '/api';
 const baseURL = configuredUrl.replace(/\/$/, '').endsWith('/api')
   ? configuredUrl.replace(/\/$/, '')
   : `${configuredUrl.replace(/\/$/, '')}/api`;
 
-const api = axios.create({ baseURL, timeout: 15000 });
+let accessToken = null;
+let refreshPromise = null;
+
+const refreshClient = axios.create({ baseURL, timeout: 15000, withCredentials: true });
+const api = axios.create({ baseURL, timeout: 15000, withCredentials: true });
+
+export function setAccessToken(token) {
+  accessToken = token || null;
+}
+
+export async function refreshSession() {
+  if (!refreshPromise) {
+    refreshPromise = refreshClient.post('/users/refresh')
+      .then(({ data }) => {
+        setAccessToken(data.accessToken);
+        return data;
+      })
+      .finally(() => { refreshPromise = null; });
+  }
+  return refreshPromise;
+}
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('authToken');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
 });
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401 && localStorage.getItem('authToken')) {
-      window.dispatchEvent(new Event('shopboard:session-expired'));
+  async (error) => {
+    const request = error.config;
+    const publicAuthRequest = ['/users/login', '/users/register', '/users/password-reset/request', '/users/password-reset/confirm']
+      .some((path) => request?.url?.endsWith(path));
+    const authFailure = ['AUTH_REQUIRED', 'INVALID_TOKEN'].includes(error.response?.data?.code);
+    if (error.response?.status !== 401 || !authFailure || request?._retry || request?.skipAuthRefresh || publicAuthRequest) {
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
+
+    request._retry = true;
+    try {
+      await refreshSession();
+      request.headers.Authorization = `Bearer ${accessToken}`;
+      return api(request);
+    } catch (refreshError) {
+      setAccessToken(null);
+      window.dispatchEvent(new Event('shopboard:session-expired'));
+      return Promise.reject(refreshError);
+    }
   },
 );
 
